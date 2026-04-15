@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Broadway Pattaya - Where The Night Comes Alive</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Oswald:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>THE BROADWAY - Pattaya's No.1 Variety Club</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Oswald:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+
     <style>
         * {
             margin: 0;
@@ -15,11 +18,13 @@
         :root {
             --wine-red: #8B2332;
             --gold: #D4A843;
+            --light-gold: #E8C973;
             --black: #0A0A0A;
+            --soft-black: #1A1A1A;
             --white: #FFFFFF;
             --cream: #F5F0E8;
-            --gold-light: rgba(212, 168, 67, 0.3);
-            --wine-transparent: rgba(139, 35, 50, 0.7);
+            --glass-bg: rgba(26, 26, 26, 0.75);
+            --glass-blur: blur(10px);
         }
 
         html {
@@ -30,11 +35,11 @@
             font-family: 'Inter', sans-serif;
             background: var(--black);
             color: var(--white);
+            line-height: 1.6;
             overflow-x: hidden;
-            position: relative;
         }
 
-        /* FILM GRAIN OVERLAY */
+        /* Film grain overlay */
         body::before {
             content: '';
             position: fixed;
@@ -42,22 +47,27 @@
             left: 0;
             width: 100%;
             height: 100%;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(255, 255, 255, 0.02),
+                    rgba(255, 255, 255, 0.02) 1px,
+                    transparent 1px,
+                    transparent 2px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0.02),
+                    rgba(255, 255, 255, 0.02) 1px,
+                    transparent 1px,
+                    transparent 2px
+                );
             pointer-events: none;
-            z-index: 5;
-            opacity: 0.04;
-            background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="400" height="400" fill="%23fff" filter="url(%23noise)" /></svg>');
-            background-size: 400px 400px;
-            animation: grain 8s steps(10) infinite;
+            z-index: 1;
+            mix-blend-mode: overlay;
         }
 
-        @keyframes grain {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(100px, 100px); }
-        }
-
-        /* PARTICLE CANVAS - REMOVED FOR CLEANER LOOK */
-
-        /* CURTAIN LOADER */
+        /* ============ LOADER ============ */
         .curtain-loader {
             position: fixed;
             top: 0;
@@ -65,97 +75,128 @@
             width: 100%;
             height: 100%;
             background: var(--black);
-            z-index: 10000;
             display: flex;
             align-items: center;
             justify-content: center;
-            pointer-events: none;
-            transition: opacity 0.8s ease;
+            z-index: 9999;
+            opacity: 1;
+            animation: fadeOutLoader 0.8s ease-out 2.5s forwards;
         }
 
-        .curtain-loader.hidden {
-            opacity: 0;
+        @keyframes fadeOutLoader {
+            to {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+
+        .curtain-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .curtain {
+            position: absolute;
+            height: 100%;
+            width: 50%;
+            background: var(--wine-red);
+            top: 0;
         }
 
         .curtain-left {
-            position: absolute;
-            top: 0;
             left: 0;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(to right, var(--wine-red) 0%, var(--wine-red) 80%, transparent 100%);
-            animation: curtain-open-left 1s ease-in-out forwards 0.5s;
-            z-index: 10001;
+            animation: curtainOut 2s ease-in-out forwards;
         }
 
         .curtain-right {
-            position: absolute;
-            top: 0;
             right: 0;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(to left, var(--wine-red) 0%, var(--wine-red) 80%, transparent 100%);
-            animation: curtain-open-right 1s ease-in-out forwards 0.5s;
-            z-index: 10001;
+            animation: curtainOut 2s ease-in-out forwards;
         }
 
-        .curtain-text {
-            position: absolute;
+        @keyframes curtainOut {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(var(--translate-direction, -100%));
+            }
+        }
+
+        .curtain-left {
+            --translate-direction: -100%;
+        }
+
+        .curtain-right {
+            --translate-direction: 100%;
+        }
+
+        .loader-text {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            animation: textGlow 2.5s ease-in-out forwards;
+        }
+
+        .loader-text h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 4rem;
-            font-weight: 900;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            letter-spacing: 0.15em;
             color: var(--gold);
-            text-shadow: 0 0 30px var(--gold), 0 0 60px rgba(212, 168, 67, 0.5);
-            letter-spacing: 3px;
-            animation: curtain-fade 2.5s ease-in-out forwards 0.2s;
-            z-index: 10002;
-            white-space: nowrap;
+            text-shadow: 0 0 30px rgba(212, 168, 67, 0.6);
         }
 
-        @keyframes curtain-open-left {
-            to { transform: translateX(-100%); }
+        @keyframes textGlow {
+            0% {
+                opacity: 1;
+                text-shadow: 0 0 30px rgba(212, 168, 67, 0.6);
+            }
+            80% {
+                opacity: 1;
+                text-shadow: 0 0 30px rgba(212, 168, 67, 0.6);
+            }
+            100% {
+                opacity: 0;
+            }
         }
 
-        @keyframes curtain-open-right {
-            to { transform: translateX(100%); }
-        }
-
-        @keyframes curtain-fade {
-            0% { opacity: 1; transform: scale(1); }
-            70% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(1.1); }
-        }
-
-        /* NAVIGATION */
-        nav {
+        /* ============ NAVIGATION ============ */
+        header {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            z-index: 999;
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            right: 0;
+            height: 70px;
+            z-index: 1000;
             transition: all 0.3s ease;
-            background: transparent;
         }
 
-        nav.scrolled {
-            background: rgba(10, 10, 10, 0.7);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
+        header.scrolled {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
             border-bottom: 1px solid rgba(212, 168, 67, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 100%;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .nav-logo {
             font-family: 'Playfair Display', serif;
             font-size: 1.5rem;
-            font-weight: 900;
+            font-weight: 700;
+            letter-spacing: 0.1em;
             color: var(--gold);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-shadow: 0 0 20px rgba(212, 168, 67, 0.3);
         }
 
         .nav-links {
@@ -166,18 +207,15 @@
         }
 
         .nav-links a {
-            color: var(--cream);
-            text-decoration: none;
             font-family: 'Oswald', sans-serif;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            color: var(--white);
+            text-decoration: none;
             text-transform: uppercase;
             transition: color 0.3s ease;
             position: relative;
-        }
-
-        .nav-links a:hover {
-            color: var(--gold);
         }
 
         .nav-links a::after {
@@ -195,81 +233,92 @@
             width: 100%;
         }
 
-        .reserve-btn {
-            background: var(--wine-red);
-            color: var(--gold);
-            padding: 0.8rem 1.5rem;
-            border: 2px solid var(--gold);
+        .nav-cta {
+            background: var(--gold);
+            color: var(--black);
+            padding: 0.7rem 1.5rem;
             border-radius: 3px;
-            font-family: 'Oswald', sans-serif;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            font-size: 0.85rem;
+            font-weight: 700;
             cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-cta:hover {
+            background: var(--light-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 168, 67, 0.3);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0.5rem;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--gold);
             transition: all 0.3s ease;
         }
 
-        .reserve-btn:hover {
-            background: var(--gold);
-            color: var(--wine-red);
-            box-shadow: 0 0 20px var(--gold);
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(12px, 12px);
         }
 
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--gold);
-            font-size: 1.8rem;
-            cursor: pointer;
-            z-index: 1001;
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
         }
 
-        .mobile-nav {
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(9px, -9px);
+        }
+
+        .mobile-menu {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100vh;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
+            height: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            z-index: 999;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 2rem;
         }
 
-        .mobile-nav.active {
+        .mobile-menu.active {
             display: flex;
         }
 
-        .mobile-nav a {
-            color: var(--cream);
-            text-decoration: none;
-            font-family: 'Oswald', sans-serif;
-            font-size: 1.5rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: color 0.3s ease;
-        }
-
-        .mobile-nav a:hover {
+        .mobile-menu a {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
             color: var(--gold);
+            text-decoration: none;
         }
 
-        .mobile-nav .reserve-btn {
-            margin-top: 2rem;
-        }
-
-        /* HERO SECTION */
+        /* ============ HERO SECTION ============ */
         .hero {
             position: relative;
             height: 100vh;
-            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
-            margin-top: 0;
+            margin-top: 70px;
         }
 
         .hero video {
@@ -279,116 +328,110 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            z-index: 1;
         }
 
-        .hero::after {
+        .hero::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom, rgba(10, 10, 10, 0.5) 0%, rgba(74, 16, 25, 0.6) 30%, rgba(10, 10, 10, 0.75) 70%, rgba(10, 10, 10, 0.95) 100%);
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.6) 0%, rgba(26, 26, 26, 0.5) 100%);
             z-index: 2;
         }
 
         .hero-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
+            position: relative;
             z-index: 3;
-            width: 90%;
-            max-width: 900px;
+            text-align: center;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .hero-badge {
-            display: inline-block;
-            background: rgba(212, 168, 67, 0.1);
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
             font-family: 'Oswald', sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 2px;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            margin-bottom: 2rem;
-            animation: fade-in-up 1s ease-out 0.2s both;
-        }
-
-        .hero-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            font-weight: 900;
             color: var(--gold);
-            letter-spacing: 3px;
-            margin-bottom: 1rem;
-            animation: fade-in-up 1s ease-out 0.4s both;
-            text-shadow: 0 0 40px rgba(212, 168, 67, 0.7), 0 0 80px rgba(212, 168, 67, 0.4), 0 4px 20px rgba(0, 0, 0, 0.8);
-        }
-
-        .hero-subtitle {
-            font-family: 'Oswald', sans-serif;
-            font-size: clamp(1.2rem, 3vw, 2rem);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--white);
             margin-bottom: 1.5rem;
-            animation: fade-in-up 1s ease-out 0.6s both;
-            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.8);
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border: 1px solid var(--gold);
+            border-radius: 50px;
         }
 
-        .hero-tagline {
-            font-size: 1.1rem;
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 10vw, 5rem);
+            font-weight: 900;
+            letter-spacing: 0.15em;
             color: var(--white);
-            margin-bottom: 3rem;
-            font-style: italic;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
-            animation: fade-in-up 1s ease-out 0.8s both;
+            margin-bottom: 1rem;
+            line-height: 1.1;
         }
 
-        .hero-buttons {
+        .hero .tagline {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1rem, 3vw, 1.8rem);
+            font-style: italic;
+            color: var(--light-gold);
+            margin-bottom: 2.5rem;
+            font-weight: 400;
+        }
+
+        .hero-ctas {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             justify-content: center;
             flex-wrap: wrap;
-            animation: fade-in-up 1s ease-out 1s both;
         }
 
-        .btn-primary, .btn-secondary {
+        .btn {
             padding: 1rem 2.5rem;
-            border: none;
-            border-radius: 3px;
             font-family: 'Oswald', sans-serif;
-            letter-spacing: 1px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
             text-transform: uppercase;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            border: none;
             cursor: pointer;
             transition: all 0.3s ease;
+            border-radius: 3px;
         }
 
         .btn-primary {
             background: var(--gold);
-            color: var(--wine-red);
+            color: var(--black);
         }
 
         .btn-primary:hover {
-            box-shadow: 0 0 30px var(--gold), 0 10px 30px rgba(212, 168, 67, 0.3);
-            transform: translateY(-2px);
+            background: var(--light-gold);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(212, 168, 67, 0.4);
         }
 
         .btn-secondary {
             background: transparent;
-            color: var(--gold);
-            border: 2px solid var(--gold);
+            color: var(--white);
+            border: 2px solid var(--white);
         }
 
         .btn-secondary:hover {
-            background: var(--gold);
-            color: var(--wine-red);
+            background: var(--white);
+            color: var(--black);
+            transform: translateY(-3px);
         }
 
         .scroll-indicator {
@@ -396,8 +439,20 @@
             bottom: 2rem;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 4;
+            z-index: 10;
             animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
         }
 
         .scroll-indicator svg {
@@ -405,185 +460,176 @@
             height: 24px;
             stroke: var(--gold);
             fill: none;
+            stroke-width: 2;
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(10px); }
-        }
-
-        @keyframes fade-in-up {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* MARQUEE DIVIDER */
+        /* ============ MARQUEE ============ */
         .marquee-section {
             background: var(--wine-red);
-            padding: 1.5rem 0;
-            overflow: hidden;
             border-top: 2px solid var(--gold);
             border-bottom: 2px solid var(--gold);
+            overflow: hidden;
+            padding: 1.5rem 0;
+        }
+
+        .marquee {
+            display: flex;
+            animation: scroll 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
         }
 
         .marquee-content {
-            display: flex;
-            white-space: nowrap;
-            animation: scroll-left 20s linear infinite;
             font-family: 'Oswald', sans-serif;
             font-size: 1.1rem;
-            letter-spacing: 2px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
             color: var(--gold);
-            text-transform: uppercase;
+            padding: 0 2rem;
+            display: flex;
+            gap: 3rem;
+            align-items: center;
         }
 
-        .marquee-content span {
-            margin-right: 3rem;
-        }
-
-        @keyframes scroll-left {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* ABOUT SECTION */
+        /* ============ ABOUT ============ */
         .about {
-            padding: 6rem 2rem;
-            background: linear-gradient(180deg, var(--black) 0%, rgba(26, 26, 26, 1) 100%);
+            padding: 8rem 2rem;
+            background: var(--black);
         }
 
-        .about > .about-grid,
-        .about > .about-content {
+        .about-container {
             max-width: 1400px;
             margin: 0 auto;
-        }
-
-        .about-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 4rem;
             align-items: center;
         }
 
-        .about-content h2 {
+        .about h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            color: var(--gold);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.2;
             margin-bottom: 2rem;
-            letter-spacing: 2px;
+            color: var(--white);
         }
 
-        .about-content p {
-            color: var(--cream);
-            line-height: 1.8;
-            margin-bottom: 2rem;
+        .about p {
             font-size: 1rem;
+            line-height: 1.8;
+            color: var(--cream);
+            margin-bottom: 1.5rem;
+        }
+
+        .quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--gold);
+            margin: 2rem 0 1rem 0;
+            padding-left: 1.5rem;
+            border-left: 3px solid var(--gold);
+        }
+
+        .quote-translation {
+            font-size: 0.95rem;
+            color: var(--light-gold);
+            margin-bottom: 3rem;
+            padding-left: 1.5rem;
         }
 
         .stats {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
-            margin-bottom: 2rem;
+            margin-top: 3rem;
         }
 
-        .stat-item {
+        .stat {
             text-align: center;
-            padding: 1.5rem;
-            border: 1px solid rgba(212, 168, 67, 0.2);
-            border-radius: 3px;
         }
 
         .stat-number {
             font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
+            font-size: 3rem;
+            font-weight: 900;
             color: var(--gold);
             margin-bottom: 0.5rem;
         }
 
         .stat-label {
             font-family: 'Oswald', sans-serif;
-            font-size: 0.85rem;
-            color: var(--cream);
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            color: var(--light-gold);
         }
 
-        .about-quote {
-            background: rgba(212, 168, 67, 0.1);
-            padding: 2rem;
-            border-left: 4px solid var(--gold);
-            margin-top: 2rem;
-            font-style: italic;
-        }
-
-        .about-quote-thai {
-            color: var(--gold);
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-        }
-
-        .about-quote-en {
-            color: var(--cream);
-            font-size: 0.95rem;
-        }
-
-        .about video {
+        .about-video {
+            position: relative;
             width: 100%;
-            height: auto;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
             border-radius: 3px;
-            box-shadow: 0 20px 40px rgba(212, 168, 67, 0.2);
+            border: 1px solid var(--gold);
         }
 
-        /* EXPERIENCE SECTION */
+        .about-video video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ============ EXPERIENCE ============ */
         .experience {
-            padding: 6rem 2rem;
-            background: rgba(139, 35, 50, 0.08);
+            padding: 8rem 2rem;
+            background: var(--soft-black);
         }
 
-        .experience .experience-grid,
-        .experience .section-title {
+        .experience-container {
             max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 0 auto;
         }
 
         .section-title {
             font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            color: var(--gold);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
             text-align: center;
             margin-bottom: 4rem;
-            letter-spacing: 2px;
+            color: var(--white);
         }
 
         .experience-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 2rem;
         }
 
         .experience-card {
-            background: rgba(10, 10, 10, 0.5);
-            border: 1px solid rgba(212, 168, 67, 0.2);
+            background: var(--black);
+            border: 1px solid rgba(212, 168, 67, 0.3);
             padding: 2.5rem;
-            border-radius: 3px;
             text-align: center;
-            transition: all 0.3s ease;
-            animation: stagger-in 0.6s ease-out forwards;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: slideInUp 0.6s ease-out both;
+            border-radius: 3px;
         }
 
-        .experience-card:nth-child(2) { animation-delay: 0.1s; }
-        .experience-card:nth-child(3) { animation-delay: 0.2s; }
-        .experience-card:nth-child(4) { animation-delay: 0.3s; }
-
-        @keyframes stagger-in {
+        @keyframes slideInUp {
             from {
                 opacity: 0;
                 transform: translateY(30px);
@@ -594,41 +640,54 @@
             }
         }
 
+        .experience-card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .experience-card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .experience-card:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
         .experience-card:hover {
+            background: var(--soft-black);
             border-color: var(--gold);
-            box-shadow: 0 0 30px rgba(212, 168, 67, 0.3), inset 0 0 20px rgba(212, 168, 67, 0.05);
             transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(212, 168, 67, 0.2);
         }
 
         .experience-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .experience-card h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
             color: var(--gold);
             margin-bottom: 1rem;
+            text-transform: uppercase;
         }
 
         .experience-card p {
+            font-size: 0.95rem;
             color: var(--cream);
             line-height: 1.6;
-            font-size: 0.95rem;
         }
 
-        /* VIDEO BREAK */
+        /* ============ VIDEO BREAK ============ */
         .video-break {
             position: relative;
             height: 70vh;
-            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
-            margin: 0;
         }
 
         .video-break video {
@@ -640,7 +699,7 @@
             object-fit: cover;
         }
 
-        .video-break::after {
+        .video-break::before {
             content: '';
             position: absolute;
             top: 0;
@@ -651,89 +710,59 @@
             z-index: 2;
         }
 
-        .video-overlay-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .video-break-content {
+            position: relative;
             z-index: 3;
             text-align: center;
-            width: 90%;
+            animation: fadeInUp 1s ease-out;
         }
 
-        .video-overlay-text h2 {
+        .video-break h2 {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
             font-weight: 900;
-            color: var(--white);
-            text-shadow: 0 4px 30px rgba(0, 0, 0, 1), 0 0 60px rgba(0, 0, 0, 0.8);
-            letter-spacing: 4px;
-            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
         }
 
-        .video-overlay-text h2 span {
+        .video-break-white {
+            color: var(--white);
+        }
+
+        .video-break-gold {
             color: var(--gold);
         }
 
-        .video-tags {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .tag {
-            display: inline-block;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            color: var(--white);
-            padding: 0.6rem 1.2rem;
-            border-radius: 50px;
-            font-family: 'Oswald', sans-serif;
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            backdrop-filter: blur(5px);
-        }
-
-        /* GALLERY SECTION */
+        /* ============ GALLERY ============ */
         .gallery {
-            padding: 6rem 2rem;
+            padding: 8rem 2rem;
             background: var(--black);
         }
 
-        .gallery .gallery-grid {
+        .gallery-container {
             max-width: 1400px;
             margin: 0 auto;
         }
 
-        .gallery h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            color: var(--gold);
-            text-align: center;
-            margin-bottom: 4rem;
-            letter-spacing: 2px;
-        }
-
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            grid-auto-rows: 280px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            animation: fadeInUp 0.8s ease-out;
         }
 
         .gallery-item {
             position: relative;
             overflow: hidden;
-            border-radius: 3px;
             cursor: pointer;
-            border: 2px solid rgba(212, 168, 67, 0.3);
+            border-radius: 3px;
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            aspect-ratio: 1;
             transition: all 0.3s ease;
         }
 
-        .gallery-item:nth-child(1) {
+        .gallery-item.featured {
             grid-column: span 2;
             grid-row: span 2;
         }
@@ -745,496 +774,456 @@
             transition: transform 0.3s ease;
         }
 
-        .gallery-item:hover {
-            border-color: var(--gold);
-            box-shadow: 0 0 30px rgba(212, 168, 67, 0.4), inset 0 0 20px rgba(212, 168, 67, 0.1);
-        }
-
         .gallery-item:hover img {
             transform: scale(1.05);
         }
 
-        /* LIGHTBOX */
-        .lightbox {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            animation: fade-in 0.3s ease;
+        .gallery-item:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 30px rgba(212, 168, 67, 0.3);
         }
 
-        .lightbox.active {
-            display: flex;
-        }
-
-        .lightbox-content {
-            position: relative;
-            max-width: 90vw;
-            max-height: 90vh;
-            animation: zoom-in 0.3s ease;
-        }
-
-        .lightbox img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .lightbox-close {
-            position: absolute;
-            top: -40px;
-            right: 0;
-            color: var(--gold);
-            font-size: 2rem;
-            cursor: pointer;
-            background: none;
-            border: none;
-            transition: all 0.3s ease;
-        }
-
-        .lightbox-close:hover {
-            transform: scale(1.2);
-        }
-
-        @keyframes zoom-in {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes fade-in {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* EVENTS SECTION */
+        /* ============ EVENTS ============ */
         .events {
-            padding: 6rem 2rem;
-            background: linear-gradient(180deg, var(--black) 0%, rgba(74, 16, 25, 0.2) 50%, var(--black) 100%);
+            padding: 8rem 2rem;
+            background: var(--soft-black);
         }
 
-        .events > * {
+        .events-container {
             max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .events h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            color: var(--gold);
-            text-align: center;
-            margin-bottom: 4rem;
-            letter-spacing: 2px;
+            margin: 0 auto;
         }
 
         .featured-events {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 2rem;
             margin-bottom: 4rem;
         }
 
-        .event-card-featured {
+        .event-card {
             position: relative;
-            height: 500px;
+            height: 400px;
             border-radius: 3px;
             overflow: hidden;
-            border: 2px solid rgba(212, 168, 67, 0.3);
-            transition: all 0.3s ease;
             cursor: pointer;
+            animation: slideInUp 0.6s ease-out both;
         }
 
-        .event-card-featured img {
+        .event-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
         }
 
-        .event-card-featured::after {
+        .event-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .event-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, rgba(10, 10, 10, 0) 0%, rgba(10, 10, 10, 0.8) 100%);
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(10,10,10,0.9) 100%);
             z-index: 2;
+        }
+
+        .event-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--gold);
+            color: var(--black);
+            padding: 0.5rem 1.2rem;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            z-index: 3;
+            border-radius: 50px;
         }
 
         .event-info {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 2rem;
+            bottom: 2rem;
+            left: 2rem;
+            right: 2rem;
             z-index: 3;
-            transition: all 0.3s ease;
         }
 
         .event-info h3 {
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
-            color: var(--gold);
+            font-weight: 700;
+            color: var(--white);
             margin-bottom: 0.5rem;
         }
 
         .event-date {
             font-family: 'Oswald', sans-serif;
             font-size: 0.9rem;
-            color: var(--cream);
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gold);
             margin-bottom: 1rem;
-        }
-
-        .event-card-featured:hover {
-            border-color: var(--gold);
-            box-shadow: 0 0 30px rgba(212, 168, 67, 0.3);
-        }
-
-        .event-card-featured:hover .event-info {
-            padding-bottom: 3rem;
-        }
-
-        .get-tickets-btn {
-            background: var(--gold);
-            color: var(--wine-red);
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 3px;
-            font-family: 'Oswald', sans-serif;
-            letter-spacing: 1px;
             text-transform: uppercase;
+        }
+
+        .event-cta {
+            background: var(--gold);
+            color: var(--black);
+            padding: 0.6rem 1.5rem;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
             font-size: 0.85rem;
+            text-transform: uppercase;
+            border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 1rem;
+            border-radius: 3px;
         }
 
-        .get-tickets-btn:hover {
-            box-shadow: 0 0 20px var(--gold);
+        .event-cta:hover {
+            background: var(--light-gold);
             transform: translateY(-2px);
         }
 
         .recurring-events {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
         }
 
-        .event-card-small {
-            background: rgba(10, 10, 10, 0.5);
-            border: 1px solid rgba(212, 168, 67, 0.2);
-            padding: 2rem;
-            border-radius: 3px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .event-card-small:hover {
-            border-color: var(--gold);
-            box-shadow: 0 0 20px rgba(212, 168, 67, 0.2);
-        }
-
-        .event-card-small h4 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
-            color: var(--gold);
-            margin-bottom: 0.5rem;
-        }
-
-        .event-card-small p {
-            color: var(--cream);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        /* SCHEDULE SECTION */
-        .schedule {
-            padding: 6rem 2rem;
-            background: rgba(26, 26, 26, 1);
-        }
-
-        .schedule > * {
-            max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .schedule h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            color: var(--gold);
-            text-align: center;
-            margin-bottom: 4rem;
-            letter-spacing: 2px;
-        }
-
-        .schedule-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .schedule-day {
-            background: linear-gradient(135deg, rgba(139, 35, 50, 0.3) 0%, rgba(212, 168, 67, 0.1) 100%);
+        .recurring-card {
+            background: var(--black);
             border: 1px solid rgba(212, 168, 67, 0.3);
             padding: 2rem;
             border-radius: 3px;
             text-align: center;
             transition: all 0.3s ease;
+            animation: slideInUp 0.6s ease-out both;
+        }
+
+        .recurring-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .recurring-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .recurring-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .recurring-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+        }
+
+        .recurring-card h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .recurring-card p {
+            font-size: 0.95rem;
+            color: var(--cream);
+            line-height: 1.6;
+        }
+
+        /* ============ SCHEDULE ============ */
+        .schedule {
+            padding: 8rem 2rem;
+            background: var(--black);
+        }
+
+        .schedule-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.5rem;
+        }
+
+        .schedule-day {
+            background: var(--soft-black);
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            padding: 2rem;
+            text-align: center;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .schedule-day.saturday {
+            background: rgba(139, 35, 50, 0.3);
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(212, 168, 67, 0.1);
         }
 
         .schedule-day:hover {
             border-color: var(--gold);
-            box-shadow: 0 0 20px rgba(212, 168, 67, 0.2);
-            transform: translateY(-5px);
         }
 
         .schedule-day h3 {
             font-family: 'Oswald', sans-serif;
             font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
             color: var(--gold);
-            margin-bottom: 0.5rem;
-            letter-spacing: 1px;
+            margin-bottom: 1rem;
             text-transform: uppercase;
         }
 
         .schedule-day p {
+            font-size: 0.9rem;
             color: var(--cream);
-            font-size: 0.95rem;
             line-height: 1.6;
         }
 
-        /* DRINKS SECTION */
+        /* ============ DRINKS/MENU ============ */
         .drinks {
-            padding: 6rem 2rem;
-            background: rgba(139, 35, 50, 0.08);
+            padding: 8rem 2rem;
+            background: var(--soft-black);
         }
 
-        .drinks > * {
+        .drinks-container {
             max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .drinks h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            color: var(--gold);
-            text-align: center;
-            margin-bottom: 4rem;
-            letter-spacing: 2px;
+            margin: 0 auto;
         }
 
         .drinks-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
             margin-bottom: 4rem;
         }
 
         .drink-card {
-            background: rgba(10, 10, 10, 0.5);
-            border: 1px solid rgba(212, 168, 67, 0.2);
+            background: var(--black);
+            border: 1px solid rgba(212, 168, 67, 0.3);
             padding: 2.5rem;
-            border-radius: 3px;
             text-align: center;
+            border-radius: 3px;
             transition: all 0.3s ease;
+            animation: slideInUp 0.6s ease-out both;
+        }
+
+        .drink-card:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .drink-card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .drink-card:nth-child(3) {
+            animation-delay: 0.2s;
         }
 
         .drink-card:hover {
             border-color: var(--gold);
-            box-shadow: 0 0 30px rgba(212, 168, 67, 0.3);
-            transform: translateY(-10px);
+            transform: translateY(-5px);
         }
 
-        .drink-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: var(--gold);
+        .drink-card h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--white);
             margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .drink-price {
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Playfair Display', serif;
             font-size: 2rem;
+            font-weight: 700;
             color: var(--gold);
             margin-bottom: 1rem;
-            letter-spacing: 1px;
-            font-weight: 700;
         }
 
-        .drink-description {
+        .drink-card p {
+            font-size: 0.9rem;
             color: var(--cream);
-            font-size: 0.95rem;
             line-height: 1.6;
         }
 
         .promos-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
         }
 
         .promo-card {
-            background: linear-gradient(135deg, rgba(212, 168, 67, 0.15) 0%, rgba(139, 35, 50, 0.15) 100%);
-            border: 2px solid var(--gold);
+            background: linear-gradient(135deg, var(--wine-red) 0%, rgba(139, 35, 50, 0.8) 100%);
+            border: 1px solid var(--gold);
             padding: 2.5rem;
-            border-radius: 3px;
             text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .promo-card:hover {
-            box-shadow: 0 0 30px rgba(212, 168, 67, 0.4);
-            transform: translateY(-10px);
-        }
-
-        .promo-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: var(--gold);
-            margin-bottom: 1rem;
-        }
-
-        .promo-details {
-            color: var(--cream);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-
-        .promo-highlight {
-            font-family: 'Oswald', sans-serif;
-            font-size: 1.1rem;
-            color: var(--white);
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            background: var(--wine-red);
-            display: inline-block;
-            padding: 0.3rem 1rem;
             border-radius: 3px;
-            margin-top: 0.5rem;
+            animation: slideInUp 0.6s ease-out both;
         }
 
-        /* CONTACT SECTION */
-        .contact {
-            padding: 6rem 2rem;
-            background: linear-gradient(180deg, var(--black) 0%, rgba(74, 16, 25, 0.15) 100%);
+        .promo-card:nth-child(1) {
+            animation-delay: 0.3s;
         }
 
-        .contact > * {
-            max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
+        .promo-card:nth-child(2) {
+            animation-delay: 0.4s;
         }
 
-        .contact h2 {
+        .promo-card:nth-child(3) {
+            animation-delay: 0.5s;
+        }
+
+        .promo-card h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .promo-card p {
+            font-size: 0.95rem;
+            color: var(--cream);
+            line-height: 1.6;
+        }
+
+        /* ============ TIKTOK ============ */
+        .tiktok {
+            padding: 8rem 2rem;
+            background: var(--black);
+            text-align: center;
+        }
+
+        .tiktok-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tiktok h2 {
             font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
-            color: var(--gold);
-            text-align: center;
-            margin-bottom: 4rem;
-            letter-spacing: 2px;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-        }
-
-        .contact-info h3 {
-            font-family: 'Oswald', sans-serif;
-            font-size: 1.2rem;
-            color: var(--gold);
-            margin-bottom: 2rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .info-item {
-            margin-bottom: 2rem;
-            border-bottom: 1px solid rgba(212, 168, 67, 0.2);
-            padding-bottom: 2rem;
-        }
-
-        .info-item:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            font-family: 'Oswald', sans-serif;
-            font-size: 0.85rem;
-            color: var(--gold);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-weight: 700;
+            color: var(--white);
             margin-bottom: 0.5rem;
         }
 
-        .info-value {
-            color: var(--cream);
+        .tiktok .subtext {
+            font-family: 'Oswald', sans-serif;
             font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        .info-value a {
+            letter-spacing: 0.05em;
             color: var(--gold);
-            text-decoration: none;
-            transition: all 0.3s ease;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
         }
 
-        .info-value a:hover {
-            text-decoration: underline;
+        .tiktok iframe {
+            width: 100%;
+            max-width: 325px;
+            margin: 0 auto;
+        }
+
+        /* ============ CONTACT ============ */
+        .contact {
+            padding: 8rem 2rem;
+            background: var(--soft-black);
+        }
+
+        .contact-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .contact-info h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 2rem;
+        }
+
+        .contact-detail {
+            margin-bottom: 2rem;
+        }
+
+        .contact-detail-label {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .contact-detail-value {
+            font-size: 1.1rem;
+            color: var(--white);
+        }
+
+        .contact-detail a {
+            color: var(--light-gold);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-detail a:hover {
+            color: var(--white);
         }
 
         .social-links {
             display: flex;
             gap: 1.5rem;
-            flex-wrap: wrap;
+            margin-top: 2rem;
         }
 
-        .social-link {
-            display: inline-flex;
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 50px;
-            height: 50px;
-            background: rgba(212, 168, 67, 0.1);
-            border: 2px solid var(--gold);
-            border-radius: 50%;
-            color: var(--gold);
-            text-decoration: none;
+            cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1.3rem;
+            color: var(--gold);
         }
 
-        .social-link:hover {
+        .social-icon:hover {
             background: var(--gold);
-            color: var(--wine-red);
-            transform: translateY(-5px);
+            color: var(--black);
+            transform: translateY(-3px);
         }
 
         .contact-map {
             position: relative;
+            width: 100%;
+            height: 400px;
             border-radius: 3px;
             overflow: hidden;
-            height: 500px;
-            border: 2px solid rgba(212, 168, 67, 0.3);
+            border: 1px solid var(--gold);
         }
 
         .contact-map iframe {
@@ -1249,512 +1238,551 @@
             filter: grayscale(0%);
         }
 
-        /* FOOTER */
+        /* ============ FOOTER ============ */
         footer {
             background: var(--wine-red);
-            padding: 3rem 2rem;
             border-top: 2px solid var(--gold);
+            padding: 4rem 2rem;
             text-align: center;
         }
 
-        .footer-logo {
+        footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        footer .logo {
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
             color: var(--gold);
             margin-bottom: 1rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
         }
 
-        .footer-tagline {
-            color: var(--cream);
+        footer .tagline {
+            font-family: 'Playfair Display', serif;
             font-style: italic;
+            font-size: 1.1rem;
+            color: var(--white);
             margin-bottom: 2rem;
-            font-size: 0.95rem;
         }
 
-        .footer-copy {
+        footer .copyright {
+            font-size: 0.85rem;
             color: var(--cream);
-            font-size: 0.9rem;
-            line-height: 1.6;
         }
 
-        .footer-copy strong {
+        /* ============ LIGHTBOX ============ */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            cursor: default;
+        }
+
+        .lightbox img {
+            width: 100%;
+            height: auto;
+            max-height: 85vh;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
             color: var(--gold);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
         }
 
-        /* RESPONSIVE */
+        .lightbox-close:hover {
+            color: var(--white);
+        }
+
+        /* ============ RESPONSIVE ============ */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
             }
 
-            .mobile-menu-btn {
-                display: block;
+            .hamburger {
+                display: flex;
             }
 
-            .about-grid {
+            .about-container {
                 grid-template-columns: 1fr;
+                gap: 2rem;
             }
 
             .stats {
                 grid-template-columns: 1fr;
             }
 
-            .hero-buttons {
-                flex-direction: column;
-            }
-
-            .contact-grid {
+            .experience-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .gallery-item:nth-child(1) {
-                grid-column: span 1;
-                grid-row: span 1;
             }
 
             .gallery-grid {
-                grid-template-columns: 1fr;
-                grid-auto-rows: 250px;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .gallery-item.featured {
+                grid-column: span 1;
+                grid-row: span 1;
             }
 
             .featured-events {
                 grid-template-columns: 1fr;
             }
 
-            .experience-card {
-                padding: 1.5rem;
+            .schedule-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .drinks-grid,
+            .promos-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .recurring-events {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
             }
 
             .contact-map {
-                height: 350px;
+                height: 300px;
             }
 
-            .hero-title {
-                font-size: 2rem;
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero .tagline {
+                font-size: 1rem;
+            }
+
+            .hero-ctas {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
             }
 
             .section-title {
-                font-size: 1.8rem;
-            }
-
-            .curtain-text {
                 font-size: 2rem;
             }
-
-            .nav-logo {
-                font-size: 1.2rem;
-            }
-        }
-
-        /* TIKTOK SECTION */
-        .tiktok-section {
-            background: linear-gradient(180deg, var(--black) 0%, rgba(139, 35, 50, 0.15) 50%, var(--black) 100%);
-            padding: 5rem 2rem;
-            position: relative;
-        }
-
-        .tiktok-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-        }
-
-        /* LAZY LOADING */
-        img[loading="lazy"] {
-            background-color: rgba(212, 168, 67, 0.1);
-        }
-
-        video {
-            display: block;
-        }
-
-        /* ANIMATION HELPERS */
-        .fade-in {
-            animation: fade-in 0.6s ease-out;
-        }
-
-        .reveal {
-            opacity: 0;
-        }
-
-        .reveal.active {
-            animation: fade-in-up 0.8s ease-out forwards;
         }
     </style>
 </head>
 <body>
-    <!-- CURTAIN LOADER -->
-    <div class="curtain-loader" id="curtainLoader">
-        <div class="curtain-left"></div>
-        <div class="curtain-right"></div>
-        <div class="curtain-text">THE BROADWAY</div>
+    <!-- Curtain Loader -->
+    <div class="curtain-loader">
+        <div class="curtain-container">
+            <div class="curtain curtain-left"></div>
+            <div class="curtain curtain-right"></div>
+            <div class="loader-text">
+                <h1>THE BROADWAY</h1>
+            </div>
+        </div>
     </div>
 
-    <!-- NAVIGATION -->
-    <nav id="navbar">
-        <div class="nav-logo">The Broadway</div>
-        <ul class="nav-links">
-            <li><a href="#about">About</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#gallery">Gallery</a></li>
-            <li><a href="#events">Events</a></li>
-            <li><a href="#schedule">Schedule</a></li>
-            <li><a href="#drinks">Menu</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li><button class="reserve-btn">Reserve Table</button></li>
-        </ul>
-        <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
-    </nav>
+    <!-- Navigation -->
+    <header>
+        <div class="nav-container">
+            <div class="nav-logo">THE BROADWAY</div>
+            <nav class="nav-links">
+                <a href="#about">About</a>
+                <a href="#experience">Experience</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#events">Events</a>
+                <a href="#schedule">Schedule</a>
+                <a href="#drinks">Menu</a>
+                <a href="#contact">Contact</a>
+            </nav>
+            <button class="nav-cta" onclick="openLINE()">Reserve Table</button>
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#about" onclick="closeMobileMenu()">About</a>
+            <a href="#experience" onclick="closeMobileMenu()">Experience</a>
+            <a href="#gallery" onclick="closeMobileMenu()">Gallery</a>
+            <a href="#events" onclick="closeMobileMenu()">Events</a>
+            <a href="#schedule" onclick="closeMobileMenu()">Schedule</a>
+            <a href="#drinks" onclick="closeMobileMenu()">Menu</a>
+            <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+            <button class="btn btn-primary" onclick="openLINE(); closeMobileMenu();">Reserve Table</button>
+        </div>
+    </header>
 
-    <!-- MOBILE NAV -->
-    <div class="mobile-nav" id="mobileNav">
-        <a href="#about">About</a>
-        <a href="#experience">Experience</a>
-        <a href="#gallery">Gallery</a>
-        <a href="#events">Events</a>
-        <a href="#schedule">Schedule</a>
-        <a href="#drinks">Menu</a>
-        <a href="#contact">Contact</a>
-        <button class="reserve-btn">Reserve Table</button>
-    </div>
-
-    <!-- HERO SECTION -->
+    <!-- Hero Section -->
     <section class="hero">
-        <video autoplay muted loop playsinline poster="images/hero-poster.jpg" preload="auto">
+        <video autoplay muted loop preload="auto" poster="images/hero-poster.jpg">
             <source src="videos/hero-interior.mp4" type="video/mp4">
         </video>
         <div class="hero-content">
             <div class="hero-badge">Pattaya's No.1 Variety Club</div>
-            <h1 class="hero-title">THE BROADWAY</h1>
-            <h2 class="hero-subtitle">Where The Night Comes Alive</h2>
-            <p class="hero-tagline">More than a place… it's your taste</p>
-            <div class="hero-buttons">
-                <a href="https://line.me/R/ti/p/@broadway.pattaya" target="_blank" class="btn-primary" style="text-decoration:none">Reserve Your Table</a>
-                <a href="#experience" class="btn-secondary" style="text-decoration:none">Explore The Show</a>
+            <h1>THE BROADWAY</h1>
+            <p class="tagline">Where The Night Comes Alive</p>
+            <div class="hero-ctas">
+                <button class="btn btn-primary" onclick="openLINE()">Reserve Table</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('experience').scrollIntoView()">Explore</button>
             </div>
         </div>
         <div class="scroll-indicator">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <path d="M12 2v10m0 0l-4-4m4 4l4-4" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 14v8" stroke="currentColor" fill="none" stroke-linecap="round"/>
             </svg>
         </div>
     </section>
 
-    <!-- MARQUEE DIVIDER -->
-    <section class="marquee-section">
-        <div class="marquee-content">
-            <span>Live Bands ◆ International DJs ◆ Dancer Shows ◆ Premium Cocktails ◆ Isan Cuisine ◆ Hip-Hop Nights ◆ VIP Tables ◆ The Show Must Go On</span>
-            <span>Live Bands ◆ International DJs ◆ Dancer Shows ◆ Premium Cocktails ◆ Isan Cuisine ◆ Hip-Hop Nights ◆ VIP Tables ◆ The Show Must Go On</span>
+    <!-- Marquee -->
+    <div class="marquee-section">
+        <div class="marquee">
+            <div class="marquee-content">
+                <span>Live Bands ◆ International DJs ◆ Dancer Shows ◆ Premium Cocktails ◆ Isan Cuisine ◆ Hip-Hop Nights ◆ VIP Tables ◆ The Show Must Go On</span>
+                <span>Live Bands ◆ International DJs ◆ Dancer Shows ◆ Premium Cocktails ◆ Isan Cuisine ◆ Hip-Hop Nights ◆ VIP Tables ◆ The Show Must Go On</span>
+            </div>
         </div>
-    </section>
+    </div>
 
-    <!-- ABOUT SECTION -->
+    <!-- About Section -->
     <section class="about" id="about">
-        <div class="about-grid">
-            <div class="about-content reveal">
-                <h2>About Broadway</h2>
-                <p>Born in 2026, Broadway Pattaya is Pattaya's premier theater-themed variety nightclub. With a stunning red-carpet entrance and iconic theater marquee, we're redefining nightlife in South Pattaya.</p>
-
+        <div class="about-container">
+            <div>
+                <h2>More Than a Bar.<br>It's a Statement.</h2>
+                <p>Born in 2026, The Broadway redefines nightlife in South Pattaya. We're not just another venue—we're a theatrical experience. Live music echoes through our intimate spaces. International DJs command the energy. Dancer shows captivate. Our Isan cuisine and premium cocktails set the stage for unforgettable nights.</p>
+                <p>Indoor & outdoor spaces blend sophistication with raw energy. Every night is a production. Every guest is part of the show.</p>
+                <div class="quote">สวรรค์ที่กำลังเต้น</div>
+                <div class="quote-translation">"Heaven in Motion" — Thai expression of pure joy</div>
                 <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-number"><span class="counter" data-target="7">0</span></div>
-                        <div class="stat-label">Nights Weekly</div>
+                    <div class="stat">
+                        <div class="stat-number" data-count="7">0</div>
+                        <div class="stat-label">Nights a Week</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number"><span class="counter" data-target="5">0</span>+</div>
-                        <div class="stat-label">Live Acts</div>
+                    <div class="stat">
+                        <div class="stat-number" data-count="5">0</div>
+                        <div class="stat-label">Acts Nightly</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number">#<span class="counter" data-target="1">0</span></div>
+                    <div class="stat">
+                        <div class="stat-number" data-count="1">0</div>
                         <div class="stat-label">Variety Club</div>
                     </div>
                 </div>
-
-                <div class="about-quote">
-                    <div class="about-quote-thai">เป็นมากกว่าบาร์…แต่คือรสนิยมของคนติดแกลม</div>
-                    <div class="about-quote-en">"More than a place… it's your taste"</div>
-                </div>
             </div>
-
-            <div class="reveal">
-                <video autoplay muted loop playsinline poster="images/band-poster.jpg" preload="none">
+            <div class="about-video">
+                <video autoplay muted loop preload="none" poster="images/band-poster.jpg">
                     <source src="videos/band-performance.mp4" type="video/mp4">
                 </video>
             </div>
         </div>
     </section>
 
-    <!-- EXPERIENCE SECTION -->
+    <!-- Experience Section -->
     <section class="experience" id="experience">
-        <h2 class="section-title">The Experience</h2>
-        <div class="experience-grid">
-            <div class="experience-card reveal">
-                <div class="experience-icon">🎸</div>
-                <h3>Live Bands</h3>
-                <p>Feel the energy of live performances from talented bands every night. From folk to international pop, there's always something spectacular on stage.</p>
-            </div>
-            <div class="experience-card reveal">
-                <div class="experience-icon">🎧</div>
-                <h3>DJs & MCs</h3>
-                <p>International DJs and charismatic MCs keep the party alive with premium sound systems and electrifying performances that last until 3 AM.</p>
-            </div>
-            <div class="experience-card reveal">
-                <div class="experience-icon">💃</div>
-                <h3>Dance Shows</h3>
-                <p>Stunning dancer performances and show productions that rival any entertainment venue. Professional choreography meets pure passion every night.</p>
-            </div>
-            <div class="experience-card reveal">
-                <div class="experience-icon">🍜</div>
-                <h3>Isan & Tapas</h3>
-                <p>Savor authentic Isan cuisine and premium tapas while enjoying the show. Craft cocktails and fine beverages complete the culinary experience.</p>
+        <div class="experience-container">
+            <h2 class="section-title">The Experience</h2>
+            <div class="experience-grid">
+                <div class="experience-card">
+                    <div class="experience-icon">🎸</div>
+                    <h3>Live Bands</h3>
+                    <p>World-class musicians performing nightly. From intimate acoustics to full-energy performances that shake the venue.</p>
+                </div>
+                <div class="experience-card">
+                    <div class="experience-icon">🎧</div>
+                    <h3>DJs & MCs</h3>
+                    <p>International DJs spinning everything from hip-hop to electronic. Expert MCs keeping the energy peak.</p>
+                </div>
+                <div class="experience-card">
+                    <div class="experience-icon">💃</div>
+                    <h3>Dance Shows</h3>
+                    <p>Professional choreography. Stunning visuals. Shows that demand your attention and steal your breath.</p>
+                </div>
+                <div class="experience-card">
+                    <div class="experience-icon">🍜</div>
+                    <h3>Isan & Tapas</h3>
+                    <p>Authentic Isan cuisine meets contemporary tapas. Every bite designed to complement the moment.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- VIDEO BREAK 1 -->
+    <!-- Video Break 1 -->
     <section class="video-break">
-        <video autoplay muted loop playsinline poster="images/band-closeup-poster.jpg" preload="none">
+        <video autoplay muted loop preload="none" poster="images/band-closeup-poster.jpg">
             <source src="videos/band-closeup.mp4" type="video/mp4">
         </video>
-        <div class="video-overlay-text">
-            <h2>The Show <span>Must Go On</span></h2>
+        <div class="video-break-content">
+            <h2><span class="video-break-white">THE SHOW</span></h2>
+            <h2><span class="video-break-gold">MUST GO ON</span></h2>
         </div>
     </section>
 
-    <!-- GALLERY SECTION -->
+    <!-- Gallery Section -->
     <section class="gallery" id="gallery">
-        <h2>Visual Gallery</h2>
-        <div class="gallery-grid">
-            <div class="gallery-item reveal">
-                <img src="images/red-carpet.jpg" alt="Red carpet entrance" loading="lazy">
-            </div>
-            <div class="gallery-item reveal">
-                <img src="images/corvette.jpg" alt="Black Corvette C8" loading="lazy">
-            </div>
-            <div class="gallery-item reveal">
-                <img src="images/gallery/interior-wide.jpg" alt="Interior wide shot" loading="lazy">
-            </div>
-            <div class="gallery-item reveal">
-                <img src="images/gallery/band-stage.jpg" alt="Band on stage" loading="lazy">
-            </div>
-            <div class="gallery-item reveal">
-                <img src="images/gallery/band-energy.jpg" alt="Band energy" loading="lazy">
-            </div>
-            <div class="gallery-item reveal">
-                <img src="images/gallery/performer-closeup.jpg" alt="Performer closeup" loading="lazy">
-            </div>
-            <div class="gallery-item reveal">
-                <img src="images/gallery/venue-night.jpg" alt="Venue at night" loading="lazy">
-            </div>
-            <div class="gallery-item reveal">
-                <img src="images/gallery/venue-glow.jpg" alt="Venue glow" loading="lazy">
-            </div>
-            <div class="gallery-item reveal">
-                <img src="images/event-poster-1.jpg" alt="Event promotion" loading="lazy">
-            </div>
-            <div class="gallery-item reveal">
-                <img src="images/event-poster-2.jpg" alt="Event promotion" loading="lazy">
-            </div>
-            <div class="gallery-item reveal">
-                <img src="images/venue-exterior-wide.jpg" alt="Broadway exterior at night" loading="lazy">
-            </div>
-            <div class="gallery-item reveal">
-                <img src="images/venue-outdoor.jpg" alt="Outdoor dining area" loading="lazy">
-            </div>
-            <div class="gallery-item reveal">
-                <img src="images/crowd-party.jpg" alt="Live crowd energy" loading="lazy">
+        <div class="gallery-container">
+            <h2 class="section-title">Gallery</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item featured" onclick="openLightbox(this)">
+                    <img src="images/red-carpet.jpg" alt="Red carpet entrance" loading="lazy">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="images/venue-exterior-wide.jpg" alt="Venue exterior" loading="lazy">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="images/corvette.jpg" alt="Black Corvette" loading="lazy">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="images/venue-outdoor.jpg" alt="Outdoor dining" loading="lazy">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="images/crowd-party.jpg" alt="Live crowd" loading="lazy">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="images/event-poster-1.jpg" alt="Event poster 1" loading="lazy">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="images/event-poster-2.jpg" alt="Event poster 2" loading="lazy">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="images/gallery/interior-wide.jpg" alt="Interior wide" loading="lazy">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="images/gallery/band-stage.jpg" alt="Band stage" loading="lazy">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="images/gallery/band-energy.jpg" alt="Band energy" loading="lazy">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="images/gallery/performer-closeup.jpg" alt="Performer closeup" loading="lazy">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="images/gallery/venue-night.jpg" alt="Venue at night" loading="lazy">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="images/gallery/venue-glow.jpg" alt="Venue glow" loading="lazy">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="images/gallery/crowd-vibe.jpg" alt="Crowd vibe" loading="lazy">
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- TIKTOK SECTION -->
-    <section class="tiktok-section" id="tiktok">
-        <h2 class="section-title" style="text-align:center; color: var(--gold); font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 0.5rem;">Follow The Vibe</h2>
-        <p style="text-align:center; color: var(--cream); font-family: 'Oswald', sans-serif; letter-spacing: 3px; text-transform: uppercase; font-size: 0.85rem; margin-bottom: 2rem; opacity: 0.7;">@broadway.pattaya on TikTok</p>
-        <div style="display:flex; justify-content:center; align-items:center; gap: 2rem; flex-wrap: wrap; max-width: 1200px; margin: 0 auto;">
-            <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@broadway.pattaya" data-unique-id="broadway.pattaya" data-embed-type="creator" style="max-width: 780px; min-width: 288px;">
-                <section>
-                    <a target="_blank" href="https://www.tiktok.com/@broadway.pattaya?refer=creator_embed">@broadway.pattaya</a>
-                </section>
-            </blockquote>
-        </div>
-    </section>
-
-    <!-- LIGHTBOX -->
-    <div class="lightbox" id="lightbox">
-        <div class="lightbox-content">
-            <button class="lightbox-close" id="lightboxClose">&times;</button>
-            <img id="lightbox-image" src="" alt="">
-        </div>
-    </div>
-
-    <!-- EVENTS SECTION -->
+    <!-- Events Section -->
     <section class="events" id="events">
-        <h2>Upcoming Events</h2>
-
-        <div class="featured-events">
-            <div class="event-card-featured reveal">
-                <img src="images/event-poster-4.jpg" alt="Songkran Festival Party">
-                <div class="event-info">
-                    <h3>Songkran Festival Party</h3>
-                    <div class="event-date">April 19, 2026</div>
-                    <button class="get-tickets-btn">Get Tickets</button>
+        <div class="events-container">
+            <h2 class="section-title">Featured Events</h2>
+            <div class="featured-events">
+                <div class="event-card">
+                    <img src="images/event-poster-4.jpg" alt="Songkran Festival Party">
+                    <div class="event-badge">THIS WEEK</div>
+                    <div class="event-info">
+                        <h3>Songkran Festival Party</h3>
+                        <div class="event-date">April 19, 2026</div>
+                        <button class="event-cta" onclick="openLINE()">Get Tickets</button>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <img src="images/event-poster-3.jpg" alt="MEAN Band Live Concert">
+                    <div class="event-badge">CONCERT</div>
+                    <div class="event-info">
+                        <h3>MEAN Band Live</h3>
+                        <div class="event-date">May 1, 2026</div>
+                        <button class="event-cta" onclick="openLINE()">Get Tickets</button>
+                    </div>
                 </div>
             </div>
-            <div class="event-card-featured reveal">
-                <img src="images/event-poster-3.jpg" alt="MEAN Band Live Concert">
-                <div class="event-info">
-                    <h3>MEAN Band Live Concert</h3>
-                    <div class="event-date">May 1, 2026</div>
-                    <button class="get-tickets-btn">Get Tickets</button>
+
+            <h3 class="section-title" style="margin-top: 3rem; margin-bottom: 2rem; font-size: 1.8rem;">Recurring Events</h3>
+            <div class="recurring-events">
+                <div class="recurring-card">
+                    <h3>Weekend Shows</h3>
+                    <p>Fri & Sat 20:30 onwards. Live bands, dancers, and international DJs. Reserve your VIP table now.</p>
                 </div>
-            </div>
-        </div>
-
-        <h3 style="color: var(--gold); font-family: 'Playfair Display', serif; text-align: center; margin: 2rem 0; font-size: 1.5rem;">Recurring Events</h3>
-
-        <div class="recurring-events">
-            <div class="event-card-small reveal">
-                <h4>Special Weekend Shows</h4>
-                <p>Every Friday & Saturday featuring Louisands Live and international DJ sets</p>
-            </div>
-            <div class="event-card-small reveal">
-                <h4>Sunday Session</h4>
-                <p>199 THB entry with premium entertainment and relaxed vibes</p>
-            </div>
-            <div class="event-card-small reveal">
-                <h4>Weekly Specials</h4>
-                <p>Monday-Wednesday Lounge & Jazz, Thursday Folk Song Night</p>
+                <div class="recurring-card">
+                    <h3>Sunday Session 199 THB</h3>
+                    <p>Every Sunday. Happy hour pricing all night. Live acoustic performances. Casual, fun, unforgettable.</p>
+                </div>
+                <div class="recurring-card">
+                    <h3>Weekly Specials</h3>
+                    <p>Mon-Thu features. Ladies get special pricing Tue-Thu. Folk song nights, international pop, and more.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- SCHEDULE SECTION -->
+    <!-- Schedule Section -->
     <section class="schedule" id="schedule">
-        <h2>Weekly Schedule</h2>
-        <div class="schedule-grid">
-            <div class="schedule-day reveal">
-                <h3>Monday - Wednesday</h3>
-                <p>Lounge & Jazz</p>
-            </div>
-            <div class="schedule-day reveal">
-                <h3>Thursday</h3>
-                <p>Folk Song Night</p>
-            </div>
-            <div class="schedule-day reveal">
-                <h3>Friday</h3>
-                <p>Thai & International Pop</p>
-            </div>
-            <div class="schedule-day reveal">
-                <h3>Saturday</h3>
-                <p>Louisands Live 20:30-21:30 + DJ Sets</p>
-            </div>
-            <div class="schedule-day reveal">
-                <h3>Sunday</h3>
-                <p>Sunday Session (199 THB)</p>
+        <div class="schedule-container">
+            <h2 class="section-title">Weekly Schedule</h2>
+            <div class="schedule-grid">
+                <div class="schedule-day">
+                    <h3>Mon-Wed</h3>
+                    <p>Lounge & Jazz<br>9 PM - Midnight</p>
+                </div>
+                <div class="schedule-day">
+                    <h3>Thursday</h3>
+                    <p>Folk Song Night<br>9 PM - 1 AM</p>
+                </div>
+                <div class="schedule-day">
+                    <h3>Friday</h3>
+                    <p>Thai & International Pop<br>9 PM - 3 AM</p>
+                </div>
+                <div class="schedule-day saturday">
+                    <h3>Saturday</h3>
+                    <p>Louisands Live<br>20:30-21:30<br>+ DJ Sets</p>
+                </div>
+                <div class="schedule-day">
+                    <h3>Sunday</h3>
+                    <p>Sunday Session<br>199 THB Special</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- VIDEO BREAK 2 -->
+    <!-- Drinks & Menu Section -->
+    <section class="drinks" id="drinks">
+        <div class="drinks-container">
+            <h2 class="section-title">Drinks & Specials</h2>
+            <div class="drinks-grid">
+                <div class="drink-card">
+                    <h3>Sunset Cocktail</h3>
+                    <div class="drink-price">280 THB</div>
+                    <p>Premium mixed spirits with sunset colors. A signature moment in every evening.</p>
+                </div>
+                <div class="drink-card">
+                    <h3>Buy 2 Get 1</h3>
+                    <div class="drink-price">400 THB</div>
+                    <p>Fri & Sat exclusive. Three rounds, triple the joy. Premium selection applies.</p>
+                </div>
+                <div class="drink-card">
+                    <h3>Concert Presale</h3>
+                    <div class="drink-price">450 THB</div>
+                    <p>Event ticket + premium cocktail combo. Only for concert performances.</p>
+                </div>
+            </div>
+
+            <h3 class="section-title" style="margin-top: 3rem; margin-bottom: 2rem; font-size: 1.8rem;">Promotions</h3>
+            <div class="promos-grid">
+                <div class="promo-card">
+                    <h3>Happy Hour</h3>
+                    <p>Twice nightly<br>5-7 PM & 9-11 PM<br>50% off select drinks</p>
+                </div>
+                <div class="promo-card">
+                    <h3>Ladies Night</h3>
+                    <p>Tue-Thu<br>First 10 ladies<br>Free entry & drink</p>
+                </div>
+                <div class="promo-card">
+                    <h3>Birthday Month</h3>
+                    <p>Celebrate here<br>Bespoke discount<br>by party size</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TikTok Section -->
+    <section class="tiktok">
+        <div class="tiktok-container">
+            <h2>Follow The Vibe</h2>
+            <div class="subtext">@broadway.pattaya on TikTok</div>
+            <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@broadway.pattaya" data-unique-id="broadway.pattaya" style="max-width: 325px; min-width: 325px;">
+                <section></section>
+            </blockquote>
+            <script async src="https://www.tiktok.com/embed.js"></script>
+        </div>
+    </section>
+
+    <!-- Video Break 2 -->
     <section class="video-break">
-        <video autoplay muted loop playsinline poster="images/exterior-poster.jpg" preload="none">
+        <video autoplay muted loop preload="none" poster="images/exterior-poster.jpg">
             <source src="videos/venue-exterior.mp4" type="video/mp4">
         </video>
-        <div class="video-overlay-text">
-            <h2>New <span>Landmark</span> in Pattaya</h2>
-            <div class="video-tags">
-                <span class="tag">Premium Venue</span>
-                <span class="tag">Theater-Themed</span>
-                <span class="tag">Red Carpet Entry</span>
-                <span class="tag">South Pattaya</span>
+        <div class="video-break-content">
+            <h2 style="margin-bottom: 2rem;">
+                <span class="video-break-white" style="display: block; font-size: 1.2rem;">NEW LANDMARK IN PATTAYA</span>
+            </h2>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <div style="background: rgba(26, 26, 26, 0.7); backdrop-filter: blur(10px); padding: 0.5rem 1.2rem; border-radius: 50px; border: 1px solid rgba(212, 168, 67, 0.3); color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em;">Premium Venue</div>
+                <div style="background: rgba(26, 26, 26, 0.7); backdrop-filter: blur(10px); padding: 0.5rem 1.2rem; border-radius: 50px; border: 1px solid rgba(212, 168, 67, 0.3); color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em;">Theater-Themed</div>
+                <div style="background: rgba(26, 26, 26, 0.7); backdrop-filter: blur(10px); padding: 0.5rem 1.2rem; border-radius: 50px; border: 1px solid rgba(212, 168, 67, 0.3); color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em;">Red Carpet Entry</div>
+                <div style="background: rgba(26, 26, 26, 0.7); backdrop-filter: blur(10px); padding: 0.5rem 1.2rem; border-radius: 50px; border: 1px solid rgba(212, 168, 67, 0.3); color: var(--gold); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em;">South Pattaya</div>
             </div>
         </div>
     </section>
 
-    <!-- DRINKS SECTION -->
-    <section class="drinks" id="drinks">
-        <h2>Signature Drinks</h2>
-        <div class="drinks-grid">
-            <div class="drink-card reveal">
-                <h3 class="drink-name">Sunset Cocktail</h3>
-                <div class="drink-price">280 THB</div>
-                <p class="drink-description">Cocktail of the Month - A perfect blend of premium spirits and exotic flavors</p>
-            </div>
-            <div class="drink-card reveal">
-                <h3 class="drink-name">House Selection</h3>
-                <div class="drink-price">400 THB</div>
-                <p class="drink-description">Buy 2 Get 1 Free - Friday & Saturday exclusive offer on our premium cocktails</p>
-            </div>
-            <div class="drink-card reveal">
-                <h3 class="drink-name">Concert Presale</h3>
-                <div class="drink-price">450 THB</div>
-                <p class="drink-description">Includes 1 premium drink - 600 THB at door, VIP tables from 1,800 THB</p>
-            </div>
-        </div>
-
-        <h3 style="color: var(--gold); font-family: 'Playfair Display', serif; text-align: center; margin: 3rem 0 2rem 0; font-size: 1.5rem;">Special Offers</h3>
-
-        <div class="promos-grid">
-            <div class="promo-card reveal">
-                <h3 class="promo-title">Happy Hour</h3>
-                <p class="promo-details">Twice nightly: 5-7 PM & 9-11 PM</p>
-                <p class="promo-highlight">Premium Discounts</p>
-            </div>
-            <div class="promo-card reveal">
-                <h3 class="promo-title">Ladies Night</h3>
-                <p class="promo-details">Tuesday - Thursday: First 10 Ladies Free</p>
-                <p class="promo-highlight">With IG Post or Google Review</p>
-            </div>
-            <div class="promo-card reveal">
-                <h3 class="promo-title">Birthday Month</h3>
-                <p class="promo-details">Celebrate with us and get special discounts</p>
-                <p class="promo-highlight">Based on Party Size</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- CONTACT SECTION -->
+    <!-- Contact Section -->
     <section class="contact" id="contact">
-        <h2>Contact Us</h2>
-        <div class="contact-grid">
+        <div class="contact-container">
             <div class="contact-info">
-                <h3>Get In Touch</h3>
+                <h2>Get In Touch</h2>
 
-                <div class="info-item">
-                    <div class="info-label">Address</div>
-                    <div class="info-value">225 Moo 10, Pattaya Tai Road, Nong Prue, Bang Lamung, Pattaya 20150</div>
+                <div class="contact-detail">
+                    <span class="contact-detail-label">Address</span>
+                    <span class="contact-detail-value">South Pattaya, Thailand</span>
                 </div>
 
-                <div class="info-item">
-                    <div class="info-label">Phone</div>
-                    <div class="info-value"><a href="tel:+66889198962">088-919-8962</a></div>
+                <div class="contact-detail">
+                    <span class="contact-detail-label">Hours</span>
+                    <span class="contact-detail-value">9 PM - 3 AM Daily</span>
                 </div>
 
-                <div class="info-item">
-                    <div class="info-label">Hours</div>
-                    <div class="info-value">Open 9:00 PM - 3:00 AM Daily</div>
+                <div class="contact-detail">
+                    <span class="contact-detail-label">Phone</span>
+                    <span class="contact-detail-value"><a href="tel:+66889198962">088-919-8962</a></span>
                 </div>
 
-                <div class="info-item">
-                    <div class="info-label">Follow Us</div>
+                <div class="contact-detail">
+                    <span class="contact-detail-label">LINE</span>
+                    <span class="contact-detail-value"><a href="https://line.me/ti/p/@broadway.pattaya" target="_blank">@broadway.pattaya</a></span>
+                </div>
+
+                <div class="contact-detail">
+                    <span class="contact-detail-label">Follow</span>
                     <div class="social-links">
-                        <a href="https://www.facebook.com/Broadway.pattaya/" target="_blank" rel="noopener noreferrer" class="social-link" title="Facebook">
+                        <a href="https://facebook.com" target="_blank" class="social-icon" title="Facebook">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                         </a>
-                        <a href="https://www.instagram.com/thebroadway.pattaya/" target="_blank" rel="noopener noreferrer" class="social-link" title="Instagram">
+                        <a href="https://instagram.com" target="_blank" class="social-icon" title="Instagram">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
                         </a>
-                        <a href="https://www.tiktok.com/@broadway.pattaya" target="_blank" rel="noopener noreferrer" class="social-link" title="TikTok">
+                        <a href="https://tiktok.com/@broadway.pattaya" target="_blank" class="social-icon" title="TikTok">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13a8.28 8.28 0 005.58 2.16V11.7a4.83 4.83 0 01-3.77-1.24V6.69h3.77z"/></svg>
                         </a>
-                        <a href="https://line.me/R/ti/p/@broadway.pattaya" target="_blank" rel="noopener noreferrer" class="social-link" title="LINE">
+                        <a href="https://line.me/ti/p/@broadway.pattaya" target="_blank" class="social-icon" title="LINE">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
                         </a>
                     </div>
@@ -1762,192 +1790,157 @@
             </div>
 
             <div class="contact-map">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3909.123!2d100.8817!3d12.9095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDU0JzM0LjIiTiAxMDDCsDUyJzU0LjEiRQ!5e0!3m2!1sen!2sth!4v1" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3927.9486020888873!2d100.8833333!3d12.9419444!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e2a1f1f1f1f1f1%3A0x1f1f1f1f1f1f1f1f!2sPattaya%2C%20Thailand!5e0!3m2!1sen!2sth!4v1234567890" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- Footer -->
     <footer>
-        <div class="footer-logo">THE BROADWAY</div>
-        <div class="footer-tagline">Where The Night Comes Alive — The Show Must Go On</div>
-        <div class="footer-copy">
-            <p>&copy; 2026 The Broadway Pattaya. All rights reserved.</p>
-            <p>225 Moo 10, Pattaya Tai Road, South Pattaya | 088-919-8962 | Open 9 PM — 3 AM Daily</p>
-            <p style="margin-top: 1rem;"><strong>Prototype by TimPaemi Co Ltd.</strong></p>
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <div class="logo">THE BROADWAY</div>
+            <div class="tagline">Where The Night Comes Alive — The Show Must Go On</div>
+            <div class="copyright">© 2026 THE BROADWAY. All rights reserved. Prototype by TimPaemi Co Ltd.</div>
         </div>
     </footer>
 
-    <script>
-        // ========== CURTAIN LOADER ==========
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const loader = document.getElementById('curtainLoader');
-                loader.classList.add('hidden');
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 800);
-            }, 2500);
-        });
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+        <div class="lightbox-content" onclick="event.stopPropagation()">
+            <button class="lightbox-close" onclick="closeLightbox()">×</button>
+            <img id="lightboxImage" src="" alt="">
+        </div>
+    </div>
 
-        // ========== NAVBAR SCROLL EFFECT ==========
-        const navbar = document.getElementById('navbar');
+    <script>
+        // Curtain loader auto-fade
+        setTimeout(() => {
+            const loader = document.querySelector('.curtain-loader');
+            if (loader) loader.style.display = 'none';
+        }, 3300);
+
+        // Navigation scroll effect
         window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
             if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
+                header.classList.add('scrolled');
             } else {
-                navbar.classList.remove('scrolled');
+                header.classList.remove('scrolled');
             }
         });
 
-        // ========== MOBILE MENU ==========
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileNav = document.getElementById('mobileNav');
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
 
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileNav.classList.toggle('active');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
         });
 
-        mobileNav.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileNav.classList.remove('active');
-            });
-        });
+        function closeMobileMenu() {
+            hamburger.classList.remove('active');
+            mobileMenu.classList.remove('active');
+        }
 
-        // ========== COUNTER ANIMATION ==========
-        const counters = document.querySelectorAll('.counter');
-        let counted = false;
-
-        function startCounters() {
+        // Counter animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
             counters.forEach(counter => {
-                const target = parseInt(counter.dataset.target);
+                const target = parseInt(counter.getAttribute('data-count'));
+                const duration = 1500;
+                const increment = target / (duration / 16);
                 let current = 0;
-                const increment = target / 30;
 
-                const count = setInterval(() => {
+                const updateCounter = () => {
                     current += increment;
-                    if (current >= target) {
-                        counter.textContent = target;
-                        clearInterval(count);
-                    } else {
+                    if (current < target) {
                         counter.textContent = Math.floor(current);
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target;
                     }
-                }, 50);
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting) {
+                        updateCounter();
+                        observer.unobserve(counter);
+                    }
+                });
+
+                observer.observe(counter);
             });
         }
 
-        // Trigger counters when stats section is visible
-        const statsSection = document.querySelector('.stats');
-        const statsObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && !counted) {
-                    counted = true;
-                    startCounters();
-                }
-            });
-        }, { threshold: 0.5 });
+        animateCounters();
 
-        if (statsSection) {
-            statsObserver.observe(statsSection);
-        }
-
-        // ========== INTERSECTION OBSERVER FOR REVEAL ANIMATIONS ==========
-        const revealElements = document.querySelectorAll('.reveal');
-
+        // Reveal animations
+        const revealElements = document.querySelectorAll('.experience-card, .recurring-card, .drink-card, .promo-card');
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    revealObserver.unobserve(entry.target);
+                    entry.target.style.animationPlayState = 'running';
                 }
             });
-        }, { threshold: 0.1 });
+        });
 
         revealElements.forEach(el => {
             revealObserver.observe(el);
         });
 
-        // ========== LAZY LOAD VIDEOS ==========
+        // Lazy load videos
         const videos = document.querySelectorAll('video[preload="none"]');
-
         const videoObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const video = entry.target;
-                    video.load();
+                    video.preload = 'auto';
                     videoObserver.unobserve(video);
                 }
             });
-        }, { threshold: 0.1 });
+        });
 
         videos.forEach(video => {
             videoObserver.observe(video);
         });
 
-        // ========== GALLERY LIGHTBOX ==========
-        const galleryItems = document.querySelectorAll('.gallery-item');
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImage = document.getElementById('lightbox-image');
-        const lightboxClose = document.getElementById('lightboxClose');
+        // Lightbox functions
+        function openLightbox(element) {
+            const lightbox = document.getElementById('lightbox');
+            const image = element.querySelector('img');
+            const lightboxImage = document.getElementById('lightboxImage');
+            lightboxImage.src = image.src;
+            lightboxImage.alt = image.alt;
+            lightbox.classList.add('active');
+        }
 
-        galleryItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const img = item.querySelector('img');
-                lightboxImage.src = img.src;
-                lightbox.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
-        });
-
-        lightboxClose.addEventListener('click', () => {
+        function closeLightbox(event) {
+            if (event && event.target.id !== 'lightbox') return;
+            const lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
-                lightbox.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
-        });
+        }
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-                lightbox.classList.remove('active');
-                document.body.style.overflow = 'auto';
+            if (e.key === 'Escape') {
+                closeLightbox();
             }
         });
 
-        // ========== SMOOTH SCROLL ==========
+        // LINE reservation
+        function openLINE() {
+            window.open('https://line.me/ti/p/@broadway.pattaya', '_blank');
+        }
+
+        // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
+                const href = this.getAttribute('href');
+                if (href !== '#' && document.querySelector(href)) {
+                    e.preventDefault();
                 }
             });
         });
-
-        // ========== RESERVE BUTTON HANDLERS ==========
-        const reserveButtons = document.querySelectorAll('.reserve-btn');
-        reserveButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                window.open('https://line.me/R/ti/p/@broadway.pattaya', '_blank');
-            });
-        });
-
-        // ========== GET TICKETS BUTTON HANDLERS ==========
-        const ticketButtons = document.querySelectorAll('.get-tickets-btn');
-        ticketButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                window.open('https://line.me/R/ti/p/@broadway.pattaya', '_blank');
-            });
-        });
-
-        // PARALLAX REMOVED — caused hero video shrinking bug
     </script>
-    <script async src="https://www.tiktok.com/embed.js"></script>
 </body>
 </html>
