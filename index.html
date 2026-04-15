@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE BROADWAY PATTAYA — Where The Night Comes Alive</title>
+    <meta name="description" content="Broadway Pattaya — Pattaya's No.1 Variety Club. Live bands, DJs, dancers, premium cocktails. The show must go on.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           BROADWAY PATTAYA — PROTOTYPE v1.0
+           Color Palette:
+           - Wine Red: #8B2332 / #6B1A27
+           - Gold: #D4A843 / #C4973B / #8B6914
+           - Black: #0A0A0A / #1A1A1A / #111
+           - White: #FFFFFF / #F5F0E8
+           ============================================ */
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --wine: #8B2332;
+            --wine-dark: #6B1A27;
+            --wine-deep: #4A1019;
+            --gold: #D4A843;
+            --gold-light: #E8C973;
+            --gold-dark: #8B6914;
+            --black: #0A0A0A;
+            --black-soft: #1A1A1A;
+            --white: #FFFFFF;
+            --cream: #F5F0E8;
+            --gray: #888;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ============ LOADER ============ */
+        #loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--black);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        #loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        #loader h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 900;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 40px rgba(212,168,67,0.3);
+            animation: pulseGold 2s ease-in-out infinite;
+        }
+        #loader .loader-sub {
+            color: var(--gray);
+            font-size: 0.85rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-top: 1rem;
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+        @keyframes pulseGold {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; text-shadow: 0 0 60px rgba(212,168,67,0.6); }
+        }
+
+        /* ============ NAVIGATION ============ */
+        nav {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s ease;
+            background: transparent;
+        }
+        nav.scrolled {
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(20px);
+            padding: 0.8rem 3rem;
+            border-bottom: 1px solid rgba(212,168,67,0.15);
+        }
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--gold);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover { color: var(--gold); }
+        .nav-links a:hover::after { width: 100%; }
+
+        .nav-cta {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold) !important;
+            padding: 0.5rem 1.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .nav-cta:hover {
+            background: var(--gold);
+            color: var(--black) !important;
+        }
+
+        /* Mobile nav toggle */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        .nav-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--gold);
+            transition: all 0.3s;
+        }
+
+        /* ============ HERO SECTION ============ */
+        #hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            min-height: 600px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #hero video {
+            position: absolute;
+            top: 50%; left: 50%;
+            min-width: 100%; min-height: 100%;
+            width: auto; height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            z-index: 0;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(10,10,10,0.4) 0%,
+                rgba(74,16,25,0.5) 40%,
+                rgba(10,10,10,0.7) 80%,
+                rgba(10,10,10,0.95) 100%
+            );
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 0 2rem;
+        }
+        .hero-badge {
+            display: inline-block;
+            border: 1px solid var(--gold);
+            padding: 0.4rem 1.8rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.5s both;
+        }
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 900;
+            line-height: 0.95;
+            color: var(--gold);
+            text-shadow: 0 0 80px rgba(212,168,67,0.3), 0 4px 20px rgba(0,0,0,0.5);
+            margin-bottom: 0.3em;
+            animation: fadeInUp 1s ease 0.7s both;
+        }
+        .hero-title span {
+            display: block;
+            font-size: 0.35em;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.5em;
+            color: var(--cream);
+            text-shadow: none;
+            margin-top: 0.5em;
+        }
+        .hero-tagline {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: clamp(1rem, 2.2vw, 1.5rem);
+            color: var(--cream);
+            opacity: 0.9;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 1s ease 0.9s both;
+        }
+        .hero-cta-group {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 1.1s both;
+        }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--gold);
+            color: var(--black);
+            padding: 1rem 2.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212,168,67,0.3);
+        }
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            color: var(--white);
+            padding: 1rem 2.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-outline:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        .hero-scroll {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            animation: fadeInUp 1s ease 1.5s both;
+        }
+        .hero-scroll span {
+            font-size: 0.6rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gray);
+        }
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; height: 40px; }
+            50% { opacity: 1; height: 55px; }
+        }
+
+        /* ============ MARQUEE DIVIDER ============ */
+        .marquee-divider {
+            width: 100%;
+            padding: 1rem 0;
+            background: var(--wine-dark);
+            overflow: hidden;
+            border-top: 1px solid rgba(212,168,67,0.2);
+            border-bottom: 1px solid rgba(212,168,67,0.2);
+        }
+        .marquee-track {
+            display: flex;
+            animation: marqueeScroll 20s linear infinite;
+            white-space: nowrap;
+        }
+        .marquee-track span {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--gold);
+            padding: 0 3rem;
+        }
+        .marquee-track .dot {
+            color: var(--wine);
+            padding: 0 0.5rem;
+        }
+        @keyframes marqueeScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ============ SECTION DEFAULTS ============ */
+        section {
+            position: relative;
+            padding: 6rem 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-label {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+        .section-title .gold { color: var(--gold); }
+        .section-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.7);
+            max-width: 600px;
+        }
+
+        /* ============ ABOUT SECTION ============ */
+        #about {
+            background: linear-gradient(180deg, var(--black) 0%, var(--black-soft) 100%);
+            padding: 8rem 2rem;
+        }
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            border: 1px solid rgba(212,168,67,0.15);
+            background: rgba(139,35,50,0.08);
+        }
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--gold);
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-top: 0.3rem;
+        }
+        .about-visual {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+        }
+        .about-visual video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .about-visual::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: 1px solid rgba(212,168,67,0.2);
+            pointer-events: none;
+        }
+        .about-quote {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.15rem;
+            color: var(--gold-light);
+            margin-top: 2rem;
+            padding-left: 1.5rem;
+            border-left: 2px solid var(--gold-dark);
+            line-height: 1.6;
+        }
+
+        /* ============ EXPERIENCE SECTION ============ */
+        #experience {
+            background: var(--black-soft);
+            padding: 8rem 2rem;
+            overflow: hidden;
+        }
+        .experience-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        .experience-header .section-text {
+            margin: 0 auto;
+        }
+        .experience-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+        .exp-card {
+            position: relative;
+            padding: 2.5rem 1.5rem;
+            border: 1px solid rgba(212,168,67,0.1);
+            background: rgba(139,35,50,0.05);
+            transition: all 0.4s ease;
+            text-align: center;
+        }
+        .exp-card:hover {
+            border-color: var(--gold);
+            background: rgba(139,35,50,0.15);
+            transform: translateY(-5px);
+        }
+        .exp-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.2rem;
+        }
+        .exp-card h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.8rem;
+        }
+        .exp-card p {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* ============ LIVE VIDEO SECTION ============ */
+        #live {
+            position: relative;
+            height: 60vh;
+            min-height: 400px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #live video {
+            position: absolute;
+            top: 50%; left: 50%;
+            min-width: 100%; min-height: 100%;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+        #live .hero-overlay {
+            background: linear-gradient(
+                to bottom,
+                rgba(10,10,10,0.6) 0%,
+                rgba(139,35,50,0.4) 50%,
+                rgba(10,10,10,0.8) 100%
+            );
+        }
+        .live-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        .live-content .section-title {
+            font-size: clamp(2rem, 5vw, 4rem);
+            margin-bottom: 0.5rem;
+        }
+        .live-tagline {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--cream);
+            opacity: 0.8;
+        }
+
+        /* ============ EVENTS SECTION ============ */
+        #events {
+            background: linear-gradient(180deg, var(--black) 0%, var(--wine-deep) 50%, var(--black) 100%);
+            padding: 8rem 2rem;
+        }
+        .events-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        .event-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .event-item {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 2rem;
+            align-items: center;
+            padding: 1.8rem 2rem;
+            background: rgba(10,10,10,0.6);
+            border: 1px solid rgba(212,168,67,0.08);
+            transition: all 0.3s ease;
+        }
+        .event-item:hover {
+            background: rgba(139,35,50,0.15);
+            border-color: rgba(212,168,67,0.2);
+        }
+        .event-date {
+            text-align: center;
+        }
+        .event-date .day {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--gold);
+            line-height: 1;
+        }
+        .event-date .month {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--gray);
+        }
+        .event-info h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.3rem;
+        }
+        .event-info p {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        .event-tag {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+        }
+        .event-tag.hot {
+            background: var(--wine);
+            border-color: var(--wine);
+            color: var(--white);
+        }
+
+        /* ============ DRINKS SECTION ============ */
+        #drinks {
+            background: var(--black-soft);
+            padding: 8rem 2rem;
+        }
+        .drinks-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .drink-card {
+            padding: 2.5rem 2rem;
+            border: 1px solid rgba(212,168,67,0.1);
+            background: linear-gradient(135deg, rgba(139,35,50,0.1) 0%, rgba(10,10,10,0.8) 100%);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .drink-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-3px);
+        }
+        .drink-card .price {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--gold);
+        }
+        .drink-card .price-unit {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        .drink-card h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin: 1rem 0 0.5rem;
+        }
+        .drink-card p {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.5;
+        }
+        .drink-card .deal-badge {
+            display: inline-block;
+            background: var(--wine);
+            color: var(--gold-light);
+            padding: 0.25rem 0.8rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        /* ============ WEEKLY PROMOS ============ */
+        .promos-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        .promo-item {
+            padding: 1.8rem;
+            border: 1px solid rgba(212,168,67,0.1);
+            background: rgba(10,10,10,0.5);
+        }
+        .promo-item h4 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+        .promo-item p {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.5;
+        }
+
+        /* ============ VENUE / EXTERIOR VIDEO SECTION ============ */
+        #venue {
+            position: relative;
+            height: 50vh;
+            min-height: 350px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #venue video {
+            position: absolute;
+            top: 50%; left: 50%;
+            min-width: 100%; min-height: 100%;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+        #venue .hero-overlay {
+            background: linear-gradient(
+                to bottom,
+                rgba(10,10,10,0.5) 0%,
+                rgba(74,16,25,0.3) 50%,
+                rgba(10,10,10,0.7) 100%
+            );
+        }
+        .venue-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        .venue-taglines {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        .venue-taglines span {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            position: relative;
+        }
+        .venue-taglines span:not(:last-child)::after {
+            content: '◆';
+            position: absolute;
+            right: -2rem;
+            color: var(--wine);
+            font-size: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* ============ CONTACT / LOCATION ============ */
+        #contact {
+            background: linear-gradient(180deg, var(--black) 0%, var(--wine-deep) 100%);
+            padding: 8rem 2rem;
+        }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+        .contact-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--gold);
+        }
+        .contact-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(212,168,67,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            color: var(--gold);
+        }
+        .contact-item .label {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-bottom: 0.2rem;
+        }
+        .contact-item .value {
+            font-size: 1rem;
+            color: var(--cream);
+        }
+        .contact-item a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        .contact-item a:hover { opacity: 0.7; }
+        .contact-map {
+            position: relative;
+            height: 100%;
+            min-height: 350px;
+            border: 1px solid rgba(212,168,67,0.15);
+            overflow: hidden;
+        }
+        .contact-map iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            filter: grayscale(80%) contrast(1.1) brightness(0.8);
+            transition: filter 0.4s ease;
+        }
+        .contact-map:hover iframe {
+            filter: grayscale(40%) contrast(1) brightness(0.9);
+        }
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .social-link {
+            width: 45px;
+            height: 45px;
+            border: 1px solid rgba(212,168,67,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        .social-link:hover {
+            background: var(--gold);
+            color: var(--black);
+            border-color: var(--gold);
+        }
+
+        /* ============ FOOTER ============ */
+        footer {
+            background: var(--black);
+            border-top: 1px solid rgba(212,168,67,0.1);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+        .footer-tagline {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+        .footer-legal {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 0.1em;
+        }
+        .footer-agency {
+            font-size: 0.65rem;
+            color: rgba(212,168,67,0.4);
+            margin-top: 1rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        /* ============ ANIMATIONS ============ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 968px) {
+            .about-grid { grid-template-columns: 1fr; }
+            .about-visual { height: 350px; }
+            .experience-cards { grid-template-columns: repeat(2, 1fr); }
+            .drinks-grid { grid-template-columns: repeat(2, 1fr); }
+            .promos-row { grid-template-columns: 1fr; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .event-item { grid-template-columns: 80px 1fr auto; gap: 1rem; padding: 1.2rem; }
+            nav { padding: 1rem 1.5rem; }
+            nav.scrolled { padding: 0.8rem 1.5rem; }
+        }
+        @media (max-width: 640px) {
+            .nav-links { display: none; }
+            .nav-toggle { display: flex; }
+            .nav-links.open {
+                display: flex;
+                flex-direction: column;
+                position: fixed;
+                top: 0; left: 0;
+                width: 100%; height: 100vh;
+                background: rgba(10,10,10,0.98);
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                z-index: 999;
+            }
+            .nav-links.open a { font-size: 1.2rem; }
+            .experience-cards { grid-template-columns: 1fr; }
+            .drinks-grid { grid-template-columns: 1fr; }
+            .event-item { grid-template-columns: 1fr; text-align: center; }
+            .event-date { display: flex; gap: 0.5rem; justify-content: center; align-items: baseline; }
+            .event-tag { margin-top: 0.8rem; }
+            section { padding: 4rem 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ============ LOADER ============ -->
+<div id="loader">
+    <h1>THE BROADWAY</h1>
+    <p class="loader-sub">Pattaya</p>
+</div>
+
+<!-- ============ NAVIGATION ============ -->
+<nav id="navbar">
+    <a href="#hero" class="nav-logo">THE BROADWAY</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#events">Events</a></li>
+        <li><a href="#drinks">Menu</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="https://line.me/R/ti/p/@broadway.pattaya" class="nav-cta" target="_blank">Reserve Table</a></li>
+    </ul>
+    <div class="nav-toggle" id="navToggle" onclick="document.getElementById('navLinks').classList.toggle('open')">
+        <span></span><span></span><span></span>
+    </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section id="hero">
+    <video autoplay muted loop playsinline poster="images/hero-poster.jpg">
+        <source src="videos/hero-interior.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-badge">Pattaya's No.1 Variety Club</div>
+        <h1 class="hero-title">
+            THE BROADWAY
+            <span>Where The Night Comes Alive</span>
+        </h1>
+        <p class="hero-tagline">Taste the music. Hear the spirit.</p>
+        <div class="hero-cta-group">
+            <a href="https://line.me/R/ti/p/@broadway.pattaya" class="btn-primary" target="_blank">
+                Reserve Your Table
+            </a>
+            <a href="#experience" class="btn-outline">
+                Explore The Show
+            </a>
+        </div>
+    </div>
+    <div class="hero-scroll">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+    </div>
+</section>
+
+<!-- ============ MARQUEE DIVIDER ============ -->
+<div class="marquee-divider">
+    <div class="marquee-track">
+        <span>Live Bands</span><span class="dot">◆</span>
+        <span>International DJs</span><span class="dot">◆</span>
+        <span>Dancer Shows</span><span class="dot">◆</span>
+        <span>Premium Cocktails</span><span class="dot">◆</span>
+        <span>Isan Cuisine</span><span class="dot">◆</span>
+        <span>Hip-Hop Nights</span><span class="dot">◆</span>
+        <span>VIP Tables</span><span class="dot">◆</span>
+        <span>The Show Must Go On</span><span class="dot">◆</span>
+        <span>Live Bands</span><span class="dot">◆</span>
+        <span>International DJs</span><span class="dot">◆</span>
+        <span>Dancer Shows</span><span class="dot">◆</span>
+        <span>Premium Cocktails</span><span class="dot">◆</span>
+        <span>Isan Cuisine</span><span class="dot">◆</span>
+        <span>Hip-Hop Nights</span><span class="dot">◆</span>
+        <span>VIP Tables</span><span class="dot">◆</span>
+        <span>The Show Must Go On</span><span class="dot">◆</span>
+    </div>
+</div>
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+    <div class="container">
+        <div class="about-grid">
+            <div class="about-text reveal">
+                <p class="section-label">Welcome to The Broadway</p>
+                <h2 class="section-title">More Than a Bar.<br><span class="gold">It's a Statement.</span></h2>
+                <p class="section-text">
+                    Broadway Pattaya is the taste of those addicted to glamour. A night of style, music, and the right people.
+                    Born in 2026, we redefined what a night out in Pattaya means — blending live music, electrifying dance shows,
+                    world-class DJs, and authentic Isan flavors into one unforgettable experience.
+                </p>
+                <p class="about-quote">
+                    "เป็นมากกว่าบาร์…แต่คือรสนิยมของคนติดแกลม"<br>
+                    <small style="color: var(--gray); font-style: normal; font-size: 0.8rem;">
+                        More than a bar — it's the taste of those addicted to glamour.
+                    </small>
+                </p>
+                <div class="about-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">Nights a Week</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">5+</div>
+                        <div class="stat-label">Live Acts</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">No.1</div>
+                        <div class="stat-label">Variety Club</div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-visual reveal">
+                <video autoplay muted loop playsinline poster="images/band-poster.jpg">
+                    <source src="videos/band-performance.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ EXPERIENCE ============ -->
+<section id="experience">
+    <div class="container">
+        <div class="experience-header reveal">
+            <p class="section-label">The Experience</p>
+            <h2 class="section-title">Every Night is <span class="gold">Opening Night</span></h2>
+            <p class="section-text">
+                From showtime hip-hop to soulful live bands, every evening at The Broadway is curated to perfection.
+            </p>
+        </div>
+        <div class="experience-cards">
+            <div class="exp-card reveal">
+                <div class="exp-icon">🎸</div>
+                <h3>Live Bands</h3>
+                <p>Professional musicians performing nightly. Feel the energy of live music that moves your soul.</p>
+            </div>
+            <div class="exp-card reveal">
+                <div class="exp-icon">🎧</div>
+                <h3>DJs & MCs</h3>
+                <p>Thai and international DJs spinning the hottest tracks. Professional MCs keeping the vibe electric.</p>
+            </div>
+            <div class="exp-card reveal">
+                <div class="exp-icon">💃</div>
+                <h3>Dance Shows</h3>
+                <p>Captivating dancer performances every night. Special shows every weekend you won't want to miss.</p>
+            </div>
+            <div class="exp-card reveal">
+                <div class="exp-icon">🍽️</div>
+                <h3>Isan Cuisine</h3>
+                <p>Authentic traditional food to fuel your night. The perfect pairing of flavor and atmosphere.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ LIVE VIDEO SECTION ============ -->
+<section id="live">
+    <video autoplay muted loop playsinline poster="images/band-closeup-poster.jpg">
+        <source src="videos/band-closeup.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="live-content">
+        <p class="section-label" style="text-align:center">Showtime</p>
+        <h2 class="section-title" style="text-align:center"><span class="gold">The Show</span> Must Go On</h2>
+        <p class="live-tagline">A night of style, music, and the right people.</p>
+    </div>
+</section>
+
+<!-- ============ EVENTS ============ -->
+<section id="events">
+    <div class="container">
+        <div class="events-header reveal">
+            <p class="section-label">What's Coming</p>
+            <h2 class="section-title">Upcoming <span class="gold">Events</span></h2>
+        </div>
+        <div class="event-list">
+            <div class="event-item reveal">
+                <div class="event-date">
+                    <div class="day">19</div>
+                    <div class="month">April 2026</div>
+                </div>
+                <div class="event-info">
+                    <h3>Songkran Festival Party</h3>
+                    <p>The biggest water festival celebration in South Pattaya</p>
+                </div>
+                <span class="event-tag hot">This Week</span>
+            </div>
+            <div class="event-item reveal">
+                <div class="event-date">
+                    <div class="day">1</div>
+                    <div class="month">May 2026</div>
+                </div>
+                <div class="event-info">
+                    <h3>MEAN Band — Live Concert</h3>
+                    <p>One of Thailand's biggest acts, live on our stage</p>
+                </div>
+                <span class="event-tag">Concert</span>
+            </div>
+            <div class="event-item reveal">
+                <div class="event-date">
+                    <div class="day">Every</div>
+                    <div class="month">Weekend</div>
+                </div>
+                <div class="event-info">
+                    <h3>Special Weekend Shows</h3>
+                    <p>Live bands, DJ sets, dancer performances &amp; surprise guest artists</p>
+                </div>
+                <span class="event-tag">Weekly</span>
+            </div>
+            <div class="event-item reveal">
+                <div class="event-date">
+                    <div class="day">Every</div>
+                    <div class="month">Sunday</div>
+                </div>
+                <div class="event-info">
+                    <h3>Sunday Session — 199 THB Deal</h3>
+                    <p>2 hours of drinks with Isan Classic food menu</p>
+                </div>
+                <span class="event-tag">Promo</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ DRINKS & MENU ============ -->
+<section id="drinks">
+    <div class="container">
+        <div class="experience-header reveal">
+            <p class="section-label">Menu Highlights</p>
+            <h2 class="section-title">Raise Your <span class="gold">Glass</span></h2>
+        </div>
+        <div class="drinks-grid">
+            <div class="drink-card reveal">
+                <div class="deal-badge">Cocktail of the Month</div>
+                <div class="price">280 <span class="price-unit">THB</span></div>
+                <h3>"Sunset" Cocktail</h3>
+                <p>Sweet, fresh, fruity — dangerously easy to drink. Part of our Summer Bold series.</p>
+            </div>
+            <div class="drink-card reveal">
+                <div class="deal-badge">Weekend Special</div>
+                <div class="price">400 <span class="price-unit">THB</span></div>
+                <h3>Cocktails Buy 2 Get 1</h3>
+                <p>Any three cocktails for the price of two. Every Friday &amp; Saturday night.</p>
+            </div>
+            <div class="drink-card reveal">
+                <div class="deal-badge">Tower Power</div>
+                <div class="price">790 <span class="price-unit">THB</span></div>
+                <h3>Chang Tower</h3>
+                <p>Ice-cold Chang draft tower at the weekend promo price. Regular 990 THB.</p>
+            </div>
+        </div>
+        <div class="promos-row reveal">
+            <div class="promo-item">
+                <h4>🌙 Sunday Sessions</h4>
+                <p>199 THB for 2 hours of drinks with our Isan Classic food menu. Every Sunday.</p>
+            </div>
+            <div class="promo-item">
+                <h4>👠 Ladies Welcome</h4>
+                <p>Free welcome shot for all ladies arriving before midnight on event nights.</p>
+            </div>
+            <div class="promo-item">
+                <h4>🥃 Jameson Partner Bar</h4>
+                <p>Official Jameson partnership. Premium Irish whiskey served the Broadway way.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ VENUE EXTERIOR VIDEO ============ -->
+<section id="venue">
+    <video autoplay muted loop playsinline poster="images/exterior-poster.jpg">
+        <source src="videos/venue-exterior.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="venue-content">
+        <p class="section-label" style="text-align:center">The Venue</p>
+        <h2 class="section-title" style="text-align:center;font-size:clamp(1.8rem,4vw,3rem)"><span class="gold">New Landmark</span> in Pattaya</h2>
+        <div class="venue-taglines">
+            <span>Red Carpet Entry</span>
+            <span>Theater Marquee</span>
+            <span>Two-Story Venue</span>
+            <span>VIP Experience</span>
+        </div>
+    </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-info reveal">
+                <p class="section-label">Find Us</p>
+                <h2 class="section-title">Visit <span class="gold">The Broadway</span></h2>
+
+                <div class="contact-item">
+                    <div class="contact-icon">📍</div>
+                    <div>
+                        <div class="label">Address</div>
+                        <div class="value">225 Moo 10, Pattaya Tai Road<br>Nong Prue, Bang Lamung<br>Pattaya 20150, Thailand</div>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">🕘</div>
+                    <div>
+                        <div class="label">Open Every Day</div>
+                        <div class="value">9:00 PM — 3:00 AM</div>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">📞</div>
+                    <div>
+                        <div class="label">Phone / WhatsApp</div>
+                        <div class="value"><a href="tel:0889198962">088-919-8962</a></div>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">💬</div>
+                    <div>
+                        <div class="label">LINE — Reservations</div>
+                        <div class="value"><a href="https://line.me/R/ti/p/@broadway.pattaya" target="_blank">@broadway.pattaya</a></div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem;">Follow The Show</h3>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/Broadway.pattaya/" class="social-link" target="_blank" title="Facebook">f</a>
+                    <a href="https://www.instagram.com/thebroadway.pattaya/" class="social-link" target="_blank" title="Instagram">ig</a>
+                    <a href="https://www.tiktok.com/@broadway.pattaya" class="social-link" target="_blank" title="TikTok">tt</a>
+                </div>
+            </div>
+            <div class="contact-map reveal">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3892.!2d100.88!3d12.91!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDU0JzM2LjAiTiAxMDDCsDUyJzQ4LjAiRQ!5e0!3m2!1sen!2sth!4v1" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+    <div class="footer-logo">THE BROADWAY</div>
+    <p class="footer-tagline">Where the night comes alive.</p>
+    <p class="footer-legal">&copy; 2026 The Broadway Pattaya. All rights reserved.</p>
+    <p class="footer-agency">Prototype by Your Agency Name</p>
+</footer>
+
+<!-- ============ JAVASCRIPT ============ -->
+<script>
+    // Loader
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.getElementById('loader').classList.add('hidden');
+        }, 1500);
+    });
+
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 80) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Scroll reveal
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
+    });
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Close mobile nav if open
+                document.getElementById('navLinks').classList.remove('open');
+            }
+        });
+    });
+
+    // Parallax effect on hero
+    window.addEventListener('scroll', () => {
+        const hero = document.getElementById('hero');
+        const scrolled = window.scrollY;
+        if (scrolled < window.innerHeight) {
+            hero.querySelector('video').style.transform =
+                `translate(-50%, calc(-50% + ${scrolled * 0.3}px))`;
+        }
+    });
+</script>
+
+</body>
+</html>
