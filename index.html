@@ -279,6 +279,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            z-index: 1;
         }
 
         .hero::after {
@@ -624,8 +625,8 @@
         /* VIDEO BREAK */
         .video-break {
             position: relative;
-            height: 60vh;
-            min-height: 400px;
+            height: 70vh;
+            min-height: 500px;
             overflow: hidden;
             margin: 0;
         }
@@ -646,7 +647,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom, rgba(10, 10, 10, 0.3) 0%, rgba(74, 16, 25, 0.25) 50%, rgba(10, 10, 10, 0.4) 100%);
+            background: rgba(10, 10, 10, 0.55);
             z-index: 2;
         }
 
@@ -662,10 +663,16 @@
 
         .video-overlay-text h2 {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            color: var(--white);
+            text-shadow: 0 4px 30px rgba(0, 0, 0, 1), 0 0 60px rgba(0, 0, 0, 0.8);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .video-overlay-text h2 span {
             color: var(--gold);
-            text-shadow: 0 0 40px rgba(212, 168, 67, 0.6), 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 80px rgba(0, 0, 0, 0.5);
-            letter-spacing: 2px;
         }
 
         .video-tags {
@@ -678,15 +685,16 @@
 
         .tag {
             display: inline-block;
-            background: rgba(212, 168, 67, 0.2);
-            border: 1px solid var(--gold);
-            color: var(--gold);
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: var(--white);
             padding: 0.6rem 1.2rem;
             border-radius: 50px;
             font-family: 'Oswald', sans-serif;
             font-size: 0.75rem;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             text-transform: uppercase;
+            backdrop-filter: blur(5px);
         }
 
         /* GALLERY SECTION */
@@ -1515,7 +1523,7 @@
             <source src="videos/band-closeup.mp4" type="video/mp4">
         </video>
         <div class="video-overlay-text">
-            <h2>The Show Must Go On</h2>
+            <h2>The Show <span>Must Go On</span></h2>
         </div>
     </section>
 
@@ -1660,7 +1668,7 @@
             <source src="videos/venue-exterior.mp4" type="video/mp4">
         </video>
         <div class="video-overlay-text">
-            <h2>New Landmark in Pattaya</h2>
+            <h2>New <span>Landmark</span> in Pattaya</h2>
             <div class="video-tags">
                 <span class="tag">Premium Venue</span>
                 <span class="tag">Theater-Themed</span>
@@ -1938,14 +1946,7 @@
             });
         });
 
-        // ========== HERO PARALLAX ==========
-        window.addEventListener('scroll', () => {
-            const hero = document.querySelector('.hero');
-            const video = hero ? hero.querySelector('video') : null;
-            if (video && window.scrollY < window.innerHeight) {
-                video.style.transform = 'translateY(' + (window.scrollY * 0.25) + 'px)';
-            }
-        });
+        // PARALLAX REMOVED — caused hero video shrinking bug
     </script>
     <script async src="https://www.tiktok.com/embed.js"></script>
 </body>
